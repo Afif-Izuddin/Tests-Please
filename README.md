@@ -1,6 +1,6 @@
 # Tests-Please
 Game Dev Project Group 14
-
+I Know the name is Tests Please, but the file is named Essays Please Idk doesn't really matter  
 I added Navid's code for gradic logic and split it into 3 and also added a bunch of stuff
 
 Things not done:  

@@ -24,6 +24,8 @@ public class GameManager : MonoBehaviour
     private float dailyTimer;
     private bool dayActive = false; 
     private PaperData currentPaper; 
+    private int playerBudget = 0;
+    private int isPlayerInDebt = 0; // 0 = No debt, 1 = In debt for one day, 2 = In debt for two days
 
     // Pause State Variables (controlled by UI buttons & new rule panel)
     private bool isGameActive = false; 
@@ -141,6 +143,13 @@ public class GameManager : MonoBehaviour
             return;
         }
 
+        // Check if player has been indebt for 2 days or more
+        if (isPlayerInDebt > 1)
+        {
+            EndGame(true); 
+            return;
+        }
+
         Debug.Log($"Preparing Day {currentDay + 1}");
 
         // Reset daily statistics
@@ -156,6 +165,7 @@ public class GameManager : MonoBehaviour
 
         // Update UI displays (main game UI elements will be hidden)
         uiManager.HideDayRecap(); 
+        uiManager.HideBugdetDayRecap(); 
         uiManager.HidePausePanel(); 
         uiManager.HideOptionsPanel(); 
         uiManager.SetButtonsActive(false); 
@@ -201,6 +211,8 @@ public class GameManager : MonoBehaviour
         Debug.Log($"Day {currentDay + 1} Ended. Papers graded today: {papersGradedToday}, Correct: {correctGradesToday}");
 
         uiManager.ShowDayRecap(currentDay + 1, papersGradedToday, correctGradesToday, correctGradesOverall);
+
+        // uiManager.ShowBugdetRecap(currentDay + 1, correctGradesToday, playerBudget ,isPlayerInDebt);
     }
 
     

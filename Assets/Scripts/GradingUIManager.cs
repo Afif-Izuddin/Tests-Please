@@ -38,6 +38,17 @@ public class GradingUIManager : MonoBehaviour
     public TextMeshProUGUI overallCorrectGradesText;
     public Button nextDayButton;
 
+     // Budget Recap UI
+    [Header("Budget Recap UI")]
+    public GameObject dayMoneyRecapPanel; 
+    public TextMeshProUGUI rentText;
+    public TextMeshProUGUI waterText;
+    public TextMeshProUGUI electricityText;
+    public TextMeshProUGUI foodText;
+    public TextMeshProUGUI totalExpensesText;
+    public TextMeshProUGUI remainingBudgetText;
+    // public Button nextDayButton;
+
     // Pause Menu UI References
     [Header("Pause Menu UI")]
     public GameObject pausePanel; 
@@ -315,10 +326,65 @@ public class GradingUIManager : MonoBehaviour
         }
     }
 
+    // ref is used her to make the values reflect on the passed variables.
+    public void ShowBudgetRecap(int dayNumber, int correctToday, ref int playerBudget , ref int isPlayerInDebt)
+    {
+        if (dayMoneyRecapPanel != null)
+        {
+            dayMoneyRecapPanel.SetActive(true);
+
+            int totalReceived = (correctToday * 5 * dayNumber) + playerBudget; // Assuming each correct paper gives $10
+            int rent = dayNumber * 20; // rents increase by $20 each day
+            int water = Random.Range(10, 40); 
+            int electricity = Random.Range(10, 40); 
+            int food = Random.Range(10, 40);  // the rest are just random numbers between 10 and 40
+
+            int totalExpenses = rent + water + electricity + food;
+            int remainingBudget = totalReceived - totalExpenses;
+
+            playerBudget = remainingBudget; // Update player's budget
+
+            if (remainingBudget < 0)
+            {
+                isPlayerInDebt++; 
+            }
+            else 
+            {
+                isPlayerInDebt = 0;
+            }
+            
+
+            rentText.text = $"Rent Bill Amount: {rent}"; // Rent is double the day number
+            waterText.text = $"Water Bill Amount: {water}";
+            electricityText.text = $"Electricity Bill Amount: {electricity}";
+            foodText.text = $"Food Bill Amount: {food}";
+            totalExpensesText.text = $"Overall Expenses: {totalExpenses}";
+            remainingBudgetText.text = $"Overall Correct: {remainingBudget}";
+            
+            // wasn't sure if this was needed, but it is here just in case.
+            essayText.text = $"Day {dayNumber} Report";
+            ruleText.text = "";
+            scoreText.text = "";
+            timerText.text = "";
+            dayText.text = "";
+
+            SetButtonsActive(false); 
+        }
+    }
+
+    // Hides the budget day recap panel.
+    public void HideBugdetDayRecap()
+    {
+        if (dayMoneyRecapPanel != null)
+        {
+            dayMoneyRecapPanel.SetActive(false);
+        }
+    }
+
 
     // Displays the final game over screen. (Please change this to like become a proper end screen or whatever)
     // Not a game over like if you win or lose (good or bad ending) I guess based on score?
-    public void EndGameDisplay(int finalCorrectCount, int totalPossiblePapers)
+    public void EndGameDisplay(int finalCorrectCount, int totalPossiblePapers) 
     {
         HideDayRecap(); 
         essayText.text = $"All Days Complete!\nTotal Correct: {finalCorrectCount}";
@@ -328,6 +394,20 @@ public class GradingUIManager : MonoBehaviour
         timerText.text = "";
         dayText.text = "Game Over!";
     }
+
+
+    // Alternative game over display method, commented out for now. - For Loss of Debt
+    // public void EndGameDisplay(int finalCorrectCount, int playerBudget) 
+    // {
+    //     HideDayRecap(); 
+    //     essayText.text = $"The bank found out about your debt and seized all of your assets! \nTotal Debt: {playerBudget}\n You are now bankrupt and Dead!";
+    //     ruleText.text = "Thanks for grading! I guess?";
+    //     SetButtonsActive(false); 
+    //     scoreText.text = $"Final Score: {finalCorrectCount}";
+    //     timerText.text = "";
+    //     dayText.text = "Game Over!";
+    // }
+    
 
     // Sets the active state (visibility) of the grading buttons.
     public void SetButtonsActive(bool active)

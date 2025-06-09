@@ -144,11 +144,11 @@ public class GameManager : MonoBehaviour
         }
 
         // Check if player has been indebt for 2 days or more
-        if (isPlayerInDebt > 1)
-        {
-            EndGame(true); 
-            return;
-        }
+        //if (isPlayerInDebt > 1)
+        //{
+        //    EndGame(true); 
+        //    return;
+        //}
 
         Debug.Log($"Preparing Day {currentDay + 1}");
 
@@ -165,7 +165,7 @@ public class GameManager : MonoBehaviour
 
         // Update UI displays (main game UI elements will be hidden)
         uiManager.HideDayRecap(); 
-        uiManager.HideBugdetDayRecap(); 
+        uiManager.HideBugdetDayRecap(); // new
         uiManager.HidePausePanel(); 
         uiManager.HideOptionsPanel(); 
         uiManager.SetButtonsActive(false); 
